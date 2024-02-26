@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+</head>
+<body>
+
+<input type="text" name="byd" id="byd" placeholder="请输入字符串">
+
+<input type="file" name="img" id="img" value="手动点击上传图片">
+<button id="image_upload_and_recognize_btn">上传图片并识别</button>
+<button id="activation_model_btn">开始训练模型</button>
+
+</body>
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.js" type="text/javascript"></script>
+<script src="static/jquery.cookie.js" type="text/javascript"></script>
+<script type="text/javascript">
+{#    调用模型并开始训练 #}
+    var activation_model_btn = document.getElementById("activation_model_btn");
+    activation_model_btn.addEventListener('click', function () {
+        $.ajax({
+            url: '/generate_model/',
+            type: 'get',
+            success: function (res) {
+                console.log(res);
+            },
+            error: function (errMsg) {
+                console.log(errMsg)
+            }
+        })
+    });
+    {# 上传图片并识别 #}
+    var image_upload_and_recognize_btn = document.getElementById("image_upload_and_recognize_btn");
+    image_upload_and_recognize_btn.addEventListener('click', function () {
+        var formData = new FormData();
+        console.log($("#img")[0].files[0])
+        formData.append('img', $("#img")[0].files[0]);
+        $.ajax({
+            url: '/image_upload/',
+            type: 'post',
+            data: formData,
+            processData: false,
+            contentType:false,
+            success : function (res) {
+                alert(res)
+            },
+            error : function (errMsg) {
+                alert(JSON.stringify(errMsg))
+            }
+        })
+    })
+</script>
+</html>
